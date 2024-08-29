@@ -40,8 +40,25 @@ def markAttendance(name):
     # Update the last attendance time
     last_attendance_time[name] = now
 
-    # Write to the CSV file
-    with open('attendance.csv', 'r+') as f:
+    # Check and add header if not present
+    file_path = 'attendance.csv'
+    if not os.path.isfile(file_path):
+        with open(file_path, 'w', newline='') as f:
+            f.write('Name,Day,Time\n')
+    
+    else:
+        with open(file_path, 'r+') as f:
+            first_line = f.readline().strip()
+            if first_line != 'Name,Day,Time':
+                f.seek(0, 0)
+                lines = f.readlines()
+                f.seek(0)
+                f.write('Name,Day,Time\n')
+                for line in lines:
+                    f.write(line)
+    
+    # Write the attendance data to the file
+    with open(file_path, 'r+') as f:
         myDataList = f.readlines()
         nameList = [line.split(',')[0] for line in myDataList]
 
