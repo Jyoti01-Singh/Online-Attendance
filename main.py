@@ -4,12 +4,14 @@ import face_recognition
 import os
 from datetime import datetime, timedelta
 
+# Path to the training images
 path = 'Training_images'
 images = []
 classNames = []
 myList = os.listdir(path)
 print("Image List:", myList)
 
+# Load images and extract class names (full names)
 for cl in myList:
     curImg = cv2.imread(f'{path}/{cl}')
     images.append(curImg)
@@ -93,8 +95,11 @@ while True:
             name = classNames[matchIndex].upper()
             y1, x2, y2, x1 = faceLoc
             y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
+
+            # Calculate text size to adjust the box size
+            (text_width, text_height), _ = cv2.getTextSize(name, cv2.FONT_HERSHEY_COMPLEX, 1, 2)
             cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
+            cv2.rectangle(img, (x1, y2 - 35), (x1 + text_width + 12, y2), (0, 255, 0), cv2.FILLED)
             cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
             markAttendance(name)
 
